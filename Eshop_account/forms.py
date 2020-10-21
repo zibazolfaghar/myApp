@@ -2,6 +2,17 @@ from django import forms
 from django.contrib.auth.models import User
 from django.core import validators
 
+
+
+class edituserform(forms.Form):
+    first_name=forms.CharField(
+        widget=forms.TextInput(attrs={ "placeholder": "لطفا نام خود را وارد نمایید"}),
+        label='نام'
+    )
+    last_name=forms.CharField(
+        widget=forms.TextInput(attrs={ "placeholder": "لطفا نام خانوادگی خود را وارد نمایید"}),
+        label='نام خانوادگی'
+        )
 class LoginForm(forms.Form):
     user_name = forms.CharField(
         widget=forms.TextInput(attrs={ "placeholder": "لطفا نام کاربری خود را وارد نمایید"}),

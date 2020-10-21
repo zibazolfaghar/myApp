@@ -1,12 +1,15 @@
-from django.shortcuts import render,redirect
-from .forms import LoginForm,RegisterForm
-from django.contrib.auth import authenticate,login,get_user_model,logout
+from django.contrib.auth.decorators import login_required
+from django.http import Http404
+from django.shortcuts import render, redirect
+from .forms import LoginForm, RegisterForm, edituserform
+from django.contrib.auth import authenticate, login, get_user_model, logout
 from django.contrib.auth.models import User
+
 
 def login_user(request):
     if request.user.is_authenticated:
-        return  redirect('/')
-    login_form=LoginForm(request.POST or None)
+        return redirect('/')
+    login_form = LoginForm(request.POST or None)
     if login_form.is_valid():
         user_name = login_form.cleaned_data.get("user_name")
         password = login_form.cleaned_data.get("password")
@@ -15,25 +18,25 @@ def login_user(request):
             login(request, user)
             return redirect('/')
         else:
-            login_form.add_error('user_name','کاربری با مشخصات وارد شده یافت نشد')
+            login_form.add_error('user_name', 'کاربری با مشخصات وارد شده یافت نشد')
 
     context = {
-        'login_form':login_form
+        'login_form': login_form
 
     }
-    return render(request,'account\login.html',context)
+    return render(request, 'account\login.html', context)
 
 
 def registerـuser(request):
     if request.user.is_authenticated:
-        return  redirect('/')
+        return redirect('/')
 
     register_form = RegisterForm(request.POST or None)
     if register_form.is_valid():
         user_name = register_form.cleaned_data.get("user_name")
         password = register_form.cleaned_data.get("password")
         email = register_form.cleaned_data.get("email")
-        User.objects.create_user( username=user_name, password=password,email=email)
+        User.objects.create_user(username=user_name, password=password, email=email)
         return redirect('/login')
     context = {
 
@@ -41,6 +44,35 @@ def registerـuser(request):
 
     }
     return render(request, 'account\Register.html', context)
+
+
 def log_out(request):
     logout(request)
     return redirect('/login')
+
+
+@login_required(login_url='/login')
+def user_account_main_page(request):
+    return render(request, 'account/user_account_main.html', {})
+
+
+@login_required(login_url='/login')
+def edit_user_profile(request):
+    user_id = request.user.id
+    user = User.objects.get(id=user_id)
+    if user is None:
+        raise Http404('کاربر مرد نظر یافت نشد')
+    edit_user_form = edituserform(request.POST or None,
+                                  initial={'first_name': user.first_name, 'last_name': user.last_name})
+    if edit_user_form.is_valid():
+        first_name=edit_user_form.cleaned_data.get('first_name')
+        last_name=edit_user_form.cleaned_data.get('last_name')
+    user.first_name=first_name
+    user.last_name=last_name
+    user.save()
+    context={'edit_form':edit_user_form}
+    return render(request, 'account/edit_account.html',context )
+
+
+def user_sidebar(request):
+    return render(request, 'account/user_sidebar.html', {})

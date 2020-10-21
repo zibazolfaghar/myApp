@@ -21,11 +21,6 @@
         </library>
       </libraries>
     </data-source>
-    <data-source source="LOCAL" name="User Data Source -" uuid="48dd7d60-0333-475e-8247-664ccd07a89d">
-      <synchronize>true</synchronize>
-      <configured-by-url>true</configured-by-url>
-      <jdbc-driver>java.sql.Driver</jdbc-driver>
-    </data-source>
     <data-source source="LOCAL" name="gg" uuid="0374e311-9ba1-42f2-b312-1142b339acac">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
