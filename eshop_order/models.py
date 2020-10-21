@@ -14,8 +14,8 @@ class Order(models.Model):
         verbose_name = 'سبد خرید'
         verbose_name_plural = 'سبدهای خرید کاربران'
 
-    def __str__(self):
-        return self.owner.get_full_name()
+    # def __str__(self):
+    #     return self.owner.get_full_name()
 
     def get_total_price(self):
         amount = 0
